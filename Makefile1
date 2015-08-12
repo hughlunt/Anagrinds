@@ -1,0 +1,5 @@
+javac -cp sim_lib.jar:javacpp.jar:lucene-core-3.0.2.jar:stanford-classifier-3.5.2.jar:edu.mit.jwi_2.3.3_jdk.jar Main.java
+
+java -jar javacpp.jar -cp sim_lib.jar:lucene-core-3.0.2.jar:edu.mit.jwi_2.3.3_jdk.jar:stanford-classifier-3.5.2.jar Main -header
+
+ghc --make Main.hs linux-x86_64/libjniMain.so
