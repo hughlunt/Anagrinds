@@ -8,6 +8,7 @@ import Data.Char
 import Data.Either
 import Data.Array.IArray
 
+import System.IO.Unsafe
 
 import Learn
 import Types
@@ -17,6 +18,7 @@ import Utilities
 import Indicators
 import Evaluation
 import LengthFunctions
+import Synonym as Syn
 
 ------------------ CLUE PARSING MECHANICS FUNCTIONS ------------------------
 
@@ -254,7 +256,8 @@ checkSynonyms answers
 
 checkSynonym :: Answer -> Bool
 checkSynonym (Answer a (def, defkey, p, n))
-  = Set.member a (Set.fromList (synonyms def))
+  = unsafePerformIO $ Syn.isSynonym a def
+  -- = Set.member a (Set.fromList (synonyms def))
 
 checkValidWords :: [Answer] -> [Answer]
 checkValidWords

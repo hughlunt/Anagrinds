@@ -26,6 +26,68 @@ import java.util.List;
 
 @Platform
 public class Main {
+
+    public static class Synonym extends FunctionPointer {
+
+      private static final String VERB = "verb";
+      // private static final String ADVERB = "adverb";
+      private static final String NOUN = "noun";
+      // private static final String ADJECTIVE = "adjective";
+
+      public @Name("synonym") boolean call(String answer, String definition) {
+
+        double similarity = 0;
+        double score = 0;
+
+        List<String> answerStems = new ArrayList<String>();
+        List<String> defStems = new ArrayList<String>();
+        try {
+          answerStems.addAll(getStems(answer));
+          defStems.addAll(getStems(definition));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+          }
+
+        if (answerStems.size() == 0 || defStems.size() == 0)
+          return false;
+
+        WordNetAssessor wn = new WordNetAssessor();
+
+        for (String answerStem : answerStems) {
+          for (String defStem : defStems) {
+            score = wn.getWordNetVerbSimilarityByIC(answerStem, defStem,
+            SimilarityConstants.FAITH_MEASURE,
+            SimilarityConstants.INTRINSIC_IC);
+
+            if (score > similarity) {
+              similarity = score;
+            }
+
+            score = wn.getWordNetNounSimilarityByIC(answerStem, defStem,
+            SimilarityConstants.FAITH_MEASURE,
+            SimilarityConstants.INTRINSIC_IC);
+            if (score > similarity) {
+              similarity = score;
+            }
+          }
+        }
+        if (similarity > 0.6)
+          return true;
+        return false;
+      }
+
+      private List<String> getStems(String word) throws IOException {
+        Stemmer s = new Stemmer();
+        List<String> stems = new ArrayList<String>();
+        stems.addAll(s.getStems(word, VERB));
+        stems.addAll(s.getStems(word, NOUN));
+        // stems.addAll(s.getStems(word, ADJECTIVE));
+        // stems.addAll(s.getStems(word, ADVERB));
+        return stems;
+      }
+    }
+
     public static class Anagrind extends FunctionPointer {
       private static final String VERB = "verb";
       private static final String ANAGRIND = "1";
@@ -64,7 +126,7 @@ public class Main {
             return false;
         }
 
-        private static String getSynonym(String words)
+        private static String getSynonym(String words) {
         // How to determine whether word has same meaning e.g. to Call On. Synonym = turn.
         // call on is not an anagrind, but turn is...
         // This could generate false positives.
