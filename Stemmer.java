@@ -14,6 +14,7 @@ public class Stemmer {
 	private static final String VERB = "verb";
 	private static final String ADJECTIVE = "adjective";
 	private static final String ADVERB = "adverb";
+	private static final String NOUN = "noun";
 
 	private WordnetStemmer stemmer;
 	private URL url;
@@ -38,6 +39,8 @@ public class Stemmer {
 			return stemmer.findStems(word, POS.ADJECTIVE);
 		case ADVERB :
 			return stemmer.findStems(word, POS.ADVERB);
+		case NOUN :
+		return stemmer.findStems(word, POS.NOUN);
 		default :
 			return Collections.emptyList();
 		}
